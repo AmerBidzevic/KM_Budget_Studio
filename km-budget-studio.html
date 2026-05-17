@@ -1,0 +1,1837 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KM Budget Studio</title>
+  <style>
+    :root {
+      --bg: #f7f9fb;
+      --surface: #ffffff;
+      --surface-2: #eef5f4;
+      --ink: #182230;
+      --muted: #667085;
+      --line: #d8e0e7;
+      --line-strong: #b8c5cf;
+      --teal: #177e89;
+      --teal-dark: #0f5f68;
+      --green: #2f7d4f;
+      --amber: #b7791f;
+      --red: #b42318;
+      --blue: #315f9a;
+      --shadow: 0 14px 35px rgba(16, 24, 40, 0.08);
+      --radius: 8px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      letter-spacing: 0;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px 1fr;
+    }
+
+    .sidebar {
+      background: #152033;
+      color: #f8fafc;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 44px;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #f6fbfb;
+      color: var(--teal-dark);
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.1;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 3px;
+      color: #aebdca;
+      font-size: 12px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d9e3eb;
+      background: transparent;
+      padding: 11px 12px;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      color: #ffffff;
+      background: rgba(255,255,255,.1);
+    }
+
+    .nav svg,
+    .icon {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    .side-panel {
+      margin-top: auto;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      padding: 14px;
+      color: #d9e3eb;
+    }
+
+    .side-panel h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #ffffff;
+    }
+
+    .side-panel p {
+      margin: 0;
+      color: #b8c7d4;
+      line-height: 1.45;
+      font-size: 12px;
+    }
+
+    main {
+      padding: 24px;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(23,126,137,.13);
+    }
+
+    .btn {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .btn:hover { border-color: var(--line-strong); }
+
+    .btn.primary {
+      color: #ffffff;
+      border-color: var(--teal);
+      background: var(--teal);
+    }
+
+    .btn.primary:hover { background: var(--teal-dark); }
+
+    .btn.danger {
+      color: var(--red);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(360px, .75fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel + .panel { margin-top: 18px; }
+
+    .panel-head {
+      min-height: 58px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .panel-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel-body {
+      padding: 18px;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .kpi {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .kpi .label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      margin-bottom: 10px;
+    }
+
+    .kpi .value {
+      font-size: 22px;
+      line-height: 1.1;
+      font-weight: 820;
+      overflow-wrap: anywhere;
+    }
+
+    .kpi .sub {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .accent-green { color: var(--green); }
+    .accent-teal { color: var(--teal); }
+    .accent-amber { color: var(--amber); }
+    .accent-red { color: var(--red); }
+    .accent-blue { color: var(--blue); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .span-2 { grid-column: span 2; }
+    .span-3 { grid-column: span 3; }
+    .span-6 { grid-column: 1 / -1; }
+
+    .category-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .category-row {
+      display: grid;
+      grid-template-columns: 1fr 124px 42px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .category-row .meta {
+      min-width: 0;
+    }
+
+    .category-row strong {
+      display: block;
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .category-row span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .budget-table {
+      display: grid;
+      gap: 10px;
+    }
+
+    .budget-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 1.2fr) 110px 120px 1fr 96px;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .budget-name {
+      min-width: 0;
+    }
+
+    .budget-name strong {
+      display: block;
+      font-size: 14px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .budget-name span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .progress {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e7edf2;
+    }
+
+    .progress > i {
+      display: block;
+      width: var(--w, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--c, var(--teal));
+    }
+
+    .status {
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #eef2f6;
+      color: var(--muted);
+    }
+
+    .status.good { background: #e8f5ee; color: var(--green); }
+    .status.warn { background: #fff4db; color: var(--amber); }
+    .status.bad { background: #fdecec; color: var(--red); }
+    .status.info { background: #e8f3f5; color: var(--teal); }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 880px;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f0f5f7;
+      color: #344054;
+      font-size: 12px;
+      font-weight: 820;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td.amount {
+      text-align: right;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: inline-grid;
+      place-items: center;
+      color: var(--muted);
+      background: #f8fafc;
+      border: 1px solid var(--line);
+    }
+
+    .icon-btn:hover { color: var(--ink); border-color: var(--line-strong); }
+    .icon-btn.danger:hover { color: var(--red); border-color: #f2b8b5; background: #fff8f7; }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1.2fr 150px 150px;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .daily-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(340px, 0.55fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .daily-form {
+      display: grid;
+      grid-template-columns: 1fr 160px;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .daily-form .wide {
+      grid-column: 1 / -1;
+    }
+
+    .today-total {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #ffffff 0%, #eef8f7 100%);
+    }
+
+    .today-total span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .today-total strong {
+      font-size: 34px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sync-box {
+      min-height: 180px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .empty {
+      min-height: 280px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 32px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .empty svg {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 14px;
+      color: var(--teal);
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.7;
+    }
+
+    .empty h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .empty p {
+      max-width: 430px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .split-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .notice {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .hidden-file {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 20;
+      max-width: 320px;
+      padding: 12px 14px;
+      color: #ffffff;
+      background: #152033;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      transform: translateY(16px);
+      opacity: 0;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1180px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .nav { grid-template-columns: repeat(4, minmax(130px, 1fr)); flex: 1; }
+      .side-panel { display: none; }
+      .grid { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      main { padding: 16px; }
+      .topbar { align-items: stretch; flex-direction: column; }
+      .toolbar { justify-content: stretch; }
+      .toolbar > * { width: 100%; }
+      .nav { grid-template-columns: 1fr 1fr; width: 100%; }
+      .form-grid, .filters { grid-template-columns: 1fr; }
+      .daily-layout, .daily-form { grid-template-columns: 1fr; }
+      .daily-form .wide { grid-column: auto; }
+      .span-2, .span-3, .span-6 { grid-column: auto; }
+      .kpis { grid-template-columns: 1fr; }
+      .budget-row { grid-template-columns: 1fr; }
+      .category-row { grid-template-columns: 1fr; }
+      .title h1 { font-size: 23px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="mark">KM</div>
+        <div>
+          <strong>KM Budget Studio</strong>
+          <span>Private local tracker</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="App sections">
+        <button class="active" data-section-target="daily">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/><path d="M20 6v12"/></svg>
+          Daily
+        </button>
+        <button data-section-target="dashboard">
+          <svg viewBox="0 0 24 24"><path d="M4 13h6V4H4v9Z"/><path d="M14 20h6V4h-6v16Z"/><path d="M4 20h6v-3H4v3Z"/></svg>
+          Dashboard
+        </button>
+        <button data-section-target="transactions">
+          <svg viewBox="0 0 24 24"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/><path d="M8 5v14"/></svg>
+          Transactions
+        </button>
+        <button data-section-target="budgets">
+          <svg viewBox="0 0 24 24"><path d="M5 6h14"/><path d="M5 12h14"/><path d="M5 18h14"/><path d="M8 6v12"/></svg>
+          Budgets
+        </button>
+        <button data-section-target="settings">
+          <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.04.04a2.1 2.1 0 0 1-2.97 2.97l-.04-.04a1.8 1.8 0 0 0-1.98-.36 1.8 1.8 0 0 0-1.1 1.65V22a2.1 2.1 0 0 1-4.2 0v-.06a1.8 1.8 0 0 0-1.1-1.65 1.8 1.8 0 0 0-1.98.36l-.04.04a2.1 2.1 0 0 1-2.97-2.97l.04-.04A1.8 1.8 0 0 0 4.6 15a1.8 1.8 0 0 0-1.65-1.1H2.9a2.1 2.1 0 0 1 0-4.2h.06A1.8 1.8 0 0 0 4.6 8a1.8 1.8 0 0 0-.36-1.98l-.04-.04a2.1 2.1 0 0 1 2.97-2.97l.04.04a1.8 1.8 0 0 0 1.98.36A1.8 1.8 0 0 0 10.3 1.8V1.7a2.1 2.1 0 0 1 4.2 0v.06a1.8 1.8 0 0 0 1.1 1.65 1.8 1.8 0 0 0 1.98-.36l.04-.04a2.1 2.1 0 0 1 2.97 2.97l-.04.04A1.8 1.8 0 0 0 19.4 8a1.8 1.8 0 0 0 1.65 1.1h.06a2.1 2.1 0 0 1 0 4.2h-.06A1.8 1.8 0 0 0 19.4 15Z"/></svg>
+          Settings
+        </button>
+      </nav>
+
+      <div class="side-panel">
+        <h3>How this saves</h3>
+        <p>Your budgets and transactions stay in this browser on this computer. Export a backup from Settings whenever you want.</p>
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="title">
+          <h1>Budget and spending tracker</h1>
+          <p>Add real transactions, adjust category budgets, and the dashboard updates instantly in KM.</p>
+        </div>
+        <div class="toolbar">
+          <div class="field">
+            <label for="activeMonth">Month</label>
+            <input id="activeMonth" type="month">
+          </div>
+          <button class="btn primary" id="focusAdd">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+            Add transaction
+          </button>
+        </div>
+      </div>
+
+      <section id="daily" class="section active">
+        <div class="daily-layout">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Today</h2>
+                <p>Fast entry for purchases. It automatically counts toward today and the selected month.</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="today-total">
+                <span id="dailyDateLabel">Today spent</span>
+                <strong id="todaySpent">0.00 KM</strong>
+              </div>
+              <form id="dailyForm" class="daily-form" style="margin-top:16px">
+                <div class="field">
+                  <label for="dailyAmount">Amount KM</label>
+                  <input id="dailyAmount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00" required>
+                </div>
+                <button class="btn primary" type="submit">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                  Add
+                </button>
+                <div class="field">
+                  <label for="dailyCategory">Category</label>
+                  <select id="dailyCategory" required></select>
+                </div>
+                <div class="field">
+                  <label for="dailyMethod">Method</label>
+                  <select id="dailyMethod">
+                    <option>Card</option>
+                    <option>Cash</option>
+                    <option>Bank transfer</option>
+                    <option>Mobile payment</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="field wide">
+                  <label for="dailyDesc">Note</label>
+                  <input id="dailyDesc" type="text" placeholder="Optional, e.g. groceries">
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Today’s entries</h2>
+                <p>Quick check before you close the app.</p>
+              </div>
+            </div>
+            <div class="panel-body" id="todayEntries"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="section">
+        <div class="kpis">
+          <div class="kpi">
+            <div class="label accent-green"><svg class="icon" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></svg>Income</div>
+            <div class="value" id="kpiIncome">0.00 KM</div>
+            <div class="sub">Money in this month</div>
+          </div>
+          <div class="kpi">
+            <div class="label accent-red"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Spending</div>
+            <div class="value" id="kpiSpending">0.00 KM</div>
+            <div class="sub">Expense transactions</div>
+          </div>
+          <div class="kpi">
+            <div class="label accent-blue"><svg class="icon" viewBox="0 0 24 24"><path d="M4 17 10 11l4 4 6-8"/><path d="M14 7h6v6"/></svg>Net</div>
+            <div class="value" id="kpiNet">0.00 KM</div>
+            <div class="sub">Income minus spending</div>
+          </div>
+          <div class="kpi">
+            <div class="label accent-teal"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-3"/></svg>Budget left</div>
+            <div class="value" id="kpiRemaining">0.00 KM</div>
+            <div class="sub">Planned expense budget left</div>
+          </div>
+          <div class="kpi">
+            <div class="label accent-amber"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M17 7.5c0-1.7-2.2-2.7-5-2.7s-5 1-5 2.7 2.2 2.7 5 2.7 5 1 5 2.7-2.2 2.7-5 2.7-5-1-5-2.7"/></svg>Savings rate</div>
+            <div class="value" id="kpiSavings">0%</div>
+            <div class="sub">Net divided by income</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div>
+            <div class="panel" id="addPanel">
+              <div class="panel-head">
+                <div>
+                  <h2>Quick add</h2>
+                  <p>Use positive amounts. Pick Income or Expense to keep reporting clean.</p>
+                </div>
+                <button class="btn" id="cancelEdit" hidden>Cancel edit</button>
+              </div>
+              <div class="panel-body">
+                <form id="txForm" class="form-grid">
+                  <input type="hidden" id="editingId">
+                  <div class="field">
+                    <label for="txDate">Date</label>
+                    <input id="txDate" type="date" required>
+                  </div>
+                  <div class="field">
+                    <label for="txType">Type</label>
+                    <select id="txType" required>
+                      <option value="expense">Expense</option>
+                      <option value="income">Income</option>
+                    </select>
+                  </div>
+                  <div class="field span-2">
+                    <label for="txCategory">Category</label>
+                    <select id="txCategory" required></select>
+                  </div>
+                  <div class="field span-2">
+                    <label for="txAmount">Amount KM</label>
+                    <input id="txAmount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00" required>
+                  </div>
+                  <div class="field span-3">
+                    <label for="txDesc">Description</label>
+                    <input id="txDesc" type="text" placeholder="e.g. BBI grocery run">
+                  </div>
+                  <div class="field">
+                    <label for="txMethod">Method</label>
+                    <select id="txMethod">
+                      <option>Card</option>
+                      <option>Cash</option>
+                      <option>Bank transfer</option>
+                      <option>Mobile payment</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="txAccount">Account</label>
+                    <input id="txAccount" type="text" placeholder="Optional">
+                  </div>
+                  <div class="field">
+                    <label for="txCleared">Cleared</label>
+                    <select id="txCleared">
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+                  <button class="btn primary span-6" id="submitTx" type="submit">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    Add transaction
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Monthly category progress</h2>
+                  <p>Expense budgets update from the Budgets section.</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div id="budgetProgress" class="budget-table"></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Category budgets</h2>
+                  <p>Edit monthly targets directly.</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div id="quickCategories" class="category-list"></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Recent activity</h2>
+                  <p>Latest real entries for the selected month.</p>
+                </div>
+              </div>
+              <div class="panel-body" id="recentActivity"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="transactions" class="section">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Transactions</h2>
+              <p>Search, edit, or delete the entries you add.</p>
+            </div>
+            <button class="btn primary" id="exportCsv">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+              Export CSV
+            </button>
+          </div>
+          <div class="panel-body">
+            <div class="filters">
+              <input id="searchTx" type="search" placeholder="Search description, category, account...">
+              <select id="filterType">
+                <option value="all">All types</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+              <select id="filterCleared">
+                <option value="all">All statuses</option>
+                <option value="yes">Cleared</option>
+                <option value="no">Not cleared</option>
+              </select>
+            </div>
+            <div id="transactionsTable"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="budgets" class="section">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Budgets and categories</h2>
+              <p>Starter categories are here to save typing. Rename, set targets, or add your own.</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <form id="categoryForm" class="form-grid">
+              <div class="field span-2">
+                <label for="catName">Category name</label>
+                <input id="catName" type="text" placeholder="e.g. Coffee" required>
+              </div>
+              <div class="field">
+                <label for="catType">Type</label>
+                <select id="catType">
+                  <option value="expense">Expense</option>
+                  <option value="income">Income</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="catBudget">Monthly KM</label>
+                <input id="catBudget" type="number" min="0" step="0.01" placeholder="0.00">
+              </div>
+              <button class="btn primary span-2" type="submit">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                Add category
+              </button>
+            </form>
+            <p class="notice">Changing a category name updates future dropdowns. Existing transactions keep the category name they were saved with.</p>
+            <div id="categoryEditor" class="budget-table" style="margin-top:16px"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="section">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Settings and backup</h2>
+              <p>Everything is local. Backups are simple JSON files you can import later.</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="split-actions">
+              <button class="btn primary" id="createSyncString">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M8 7h8"/><path d="M8 12h8"/><path d="M8 17h5"/><path d="M5 3h14v18H5z"/></svg>
+                Create sync string
+              </button>
+              <button class="btn" id="importSyncString">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 21V9"/><path d="m7 14 5-5 5 5"/><path d="M5 3h14"/></svg>
+                Import string
+              </button>
+              <button class="btn" id="copySyncString">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy string
+              </button>
+              <button class="btn primary" id="exportJson">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                Export backup
+              </button>
+              <button class="btn" id="importJsonBtn">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 21V9"/><path d="m7 14 5-5 5 5"/><path d="M5 3h14"/></svg>
+                Import backup
+              </button>
+              <button class="btn danger" id="resetData">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 15H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                Clear all data
+              </button>
+              <input id="importJson" class="hidden-file" type="file" accept="application/json">
+            </div>
+            <div class="field" style="margin-top:16px">
+              <label for="syncString">Phone / PC sync string</label>
+              <textarea id="syncString" class="sync-box" placeholder="Create a sync string here, or paste one from your phone and press Import string."></textarea>
+            </div>
+            <p class="notice">Currency display is fixed to KM. Amounts are stored as positive numbers, with Income or Expense deciding how totals are calculated. Sync strings include categories, budgets, settings, and transaction history.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = "km-budget-studio-v1";
+
+    const DEFAULT_CATEGORIES = [
+      "Salary|income", "Side income|income", "Refunds|income", "Other income|income",
+      "Rent / Mortgage|expense", "Utilities|expense", "Groceries|expense", "Dining out|expense",
+      "Transportation|expense", "Insurance|expense", "Phone / Internet|expense",
+      "Subscriptions|expense", "Debt payments|expense", "Savings / Investing|expense",
+      "Health|expense", "Personal care|expense", "Shopping|expense", "Entertainment|expense",
+      "Travel|expense", "Gifts / Donations|expense", "Miscellaneous|expense", "Buffer|expense"
+    ].map((item, index) => {
+      const [name, type] = item.split("|");
+      return { id: cryptoId(), name, type, budget: 0, sort: index };
+    });
+
+    let state = loadState();
+
+    const els = {
+      activeMonth: document.querySelector("#activeMonth"),
+      txForm: document.querySelector("#txForm"),
+      editingId: document.querySelector("#editingId"),
+      txDate: document.querySelector("#txDate"),
+      txType: document.querySelector("#txType"),
+      txCategory: document.querySelector("#txCategory"),
+      txAmount: document.querySelector("#txAmount"),
+      txDesc: document.querySelector("#txDesc"),
+      txMethod: document.querySelector("#txMethod"),
+      txAccount: document.querySelector("#txAccount"),
+      txCleared: document.querySelector("#txCleared"),
+      dailyForm: document.querySelector("#dailyForm"),
+      dailyAmount: document.querySelector("#dailyAmount"),
+      dailyCategory: document.querySelector("#dailyCategory"),
+      dailyMethod: document.querySelector("#dailyMethod"),
+      dailyDesc: document.querySelector("#dailyDesc"),
+      dailyDateLabel: document.querySelector("#dailyDateLabel"),
+      todaySpent: document.querySelector("#todaySpent"),
+      todayEntries: document.querySelector("#todayEntries"),
+      submitTx: document.querySelector("#submitTx"),
+      cancelEdit: document.querySelector("#cancelEdit"),
+      focusAdd: document.querySelector("#focusAdd"),
+      budgetProgress: document.querySelector("#budgetProgress"),
+      quickCategories: document.querySelector("#quickCategories"),
+      recentActivity: document.querySelector("#recentActivity"),
+      transactionsTable: document.querySelector("#transactionsTable"),
+      searchTx: document.querySelector("#searchTx"),
+      filterType: document.querySelector("#filterType"),
+      filterCleared: document.querySelector("#filterCleared"),
+      categoryForm: document.querySelector("#categoryForm"),
+      categoryEditor: document.querySelector("#categoryEditor"),
+      catName: document.querySelector("#catName"),
+      catType: document.querySelector("#catType"),
+      catBudget: document.querySelector("#catBudget"),
+      createSyncString: document.querySelector("#createSyncString"),
+      importSyncString: document.querySelector("#importSyncString"),
+      copySyncString: document.querySelector("#copySyncString"),
+      syncString: document.querySelector("#syncString"),
+      exportCsv: document.querySelector("#exportCsv"),
+      exportJson: document.querySelector("#exportJson"),
+      importJsonBtn: document.querySelector("#importJsonBtn"),
+      importJson: document.querySelector("#importJson"),
+      resetData: document.querySelector("#resetData"),
+      toast: document.querySelector("#toast")
+    };
+
+    init();
+
+    function init() {
+      els.activeMonth.value = state.activeMonth || monthKey(new Date());
+      els.txDate.value = todayKey();
+      bindEvents();
+      renderAll();
+      runQaModeIfRequested();
+    }
+
+    function bindEvents() {
+      document.querySelectorAll("[data-section-target]").forEach(button => {
+        button.addEventListener("click", () => showSection(button.dataset.sectionTarget));
+      });
+
+      els.activeMonth.addEventListener("change", () => {
+        state.activeMonth = els.activeMonth.value || monthKey(new Date());
+        saveState();
+        renderAll();
+      });
+
+      els.txType.addEventListener("change", renderCategoryOptions);
+      els.txForm.addEventListener("submit", saveTransaction);
+      els.dailyForm.addEventListener("submit", saveDailyTransaction);
+      els.cancelEdit.addEventListener("click", resetTransactionForm);
+      els.focusAdd.addEventListener("click", () => {
+        showSection("dashboard");
+        document.querySelector("#addPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+        setTimeout(() => els.txAmount.focus(), 250);
+      });
+
+      [els.searchTx, els.filterType, els.filterCleared].forEach(el => {
+        el.addEventListener("input", renderTransactions);
+        el.addEventListener("change", renderTransactions);
+      });
+
+      els.categoryForm.addEventListener("submit", addCategory);
+      els.createSyncString.addEventListener("click", createSyncString);
+      els.importSyncString.addEventListener("click", importSyncString);
+      els.copySyncString.addEventListener("click", copySyncString);
+      els.exportCsv.addEventListener("click", exportCsv);
+      els.exportJson.addEventListener("click", exportJson);
+      els.importJsonBtn.addEventListener("click", () => els.importJson.click());
+      els.importJson.addEventListener("change", importJson);
+      els.resetData.addEventListener("click", resetAllData);
+    }
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (saved && Array.isArray(saved.categories) && Array.isArray(saved.transactions)) {
+          return { ...saved, activeMonth: saved.activeMonth || monthKey(new Date()) };
+        }
+      } catch (_) {}
+      return {
+        activeMonth: monthKey(new Date()),
+        categories: DEFAULT_CATEGORIES,
+        transactions: []
+      };
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function renderAll() {
+      renderCategoryOptions();
+      renderDaily();
+      renderDashboard();
+      renderTransactions();
+      renderCategoryEditor();
+    }
+
+    function showSection(id) {
+      document.querySelectorAll(".section").forEach(section => section.classList.toggle("active", section.id === id));
+      document.querySelectorAll("[data-section-target]").forEach(button => button.classList.toggle("active", button.dataset.sectionTarget === id));
+    }
+
+    function renderCategoryOptions() {
+      const type = els.txType.value;
+      const cats = state.categories
+        .filter(cat => cat.type === type)
+        .sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name));
+      els.txCategory.innerHTML = cats.map(cat => `<option value="${escapeHtml(cat.name)}">${escapeHtml(cat.name)}</option>`).join("");
+      if (els.dailyCategory) {
+        const expenseCats = state.categories
+          .filter(cat => cat.type === "expense")
+          .sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name));
+        els.dailyCategory.innerHTML = expenseCats.map(cat => `<option value="${escapeHtml(cat.name)}">${escapeHtml(cat.name)}</option>`).join("");
+      }
+    }
+
+    function renderDaily() {
+      const today = todayKey();
+      const rows = state.transactions.filter(t => t.date === today && t.type === "expense");
+      const total = sum(rows.map(t => t.amount));
+      els.dailyDateLabel.textContent = `Today spent · ${dateLabel(today)}`;
+      els.todaySpent.textContent = km(total);
+      const sorted = [...rows].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+      if (!sorted.length) {
+        els.todayEntries.innerHTML = emptyBlock("No spending added today", "Use the fast entry form when you buy something. It will also update the monthly dashboard.");
+        return;
+      }
+      els.todayEntries.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Category</th><th>Note</th><th>Method</th><th>Amount</th></tr></thead>
+            <tbody>
+              ${sorted.map(t => `<tr><td>${escapeHtml(t.category)}</td><td>${escapeHtml(t.description || "")}</td><td>${escapeHtml(t.method || "")}</td><td class="amount accent-red">${km(t.amount)}</td></tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderDashboard() {
+      const month = els.activeMonth.value;
+      const rows = txForMonth(month);
+      const income = sum(rows.filter(t => t.type === "income").map(t => t.amount));
+      const spending = sum(rows.filter(t => t.type === "expense").map(t => t.amount));
+      const net = income - spending;
+      const planned = sum(state.categories.filter(c => c.type === "expense").map(c => Number(c.budget || 0)));
+      const remaining = planned - spending;
+      const savingsRate = income > 0 ? net / income : 0;
+
+      document.querySelector("#kpiIncome").textContent = km(income);
+      document.querySelector("#kpiSpending").textContent = km(spending);
+      document.querySelector("#kpiNet").textContent = km(net);
+      document.querySelector("#kpiRemaining").textContent = km(remaining);
+      document.querySelector("#kpiSavings").textContent = percent(savingsRate);
+
+      renderBudgetProgress(rows);
+      renderQuickCategories(rows);
+      renderRecent(rows);
+    }
+
+    function renderBudgetProgress(monthRows) {
+      const expenseCats = state.categories.filter(c => c.type === "expense").sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name));
+      if (!expenseCats.length) {
+        els.budgetProgress.innerHTML = emptyBlock("No expense categories yet", "Add expense categories in Budgets to start tracking spending progress.");
+        return;
+      }
+
+      els.budgetProgress.innerHTML = expenseCats.map(cat => {
+        const spent = sum(monthRows.filter(t => t.type === "expense" && t.category === cat.name).map(t => t.amount));
+        const budget = Number(cat.budget || 0);
+        const ratio = budget > 0 ? spent / budget : 0;
+        const width = Math.min(100, Math.round(ratio * 100));
+        const status = budget === 0 && spent === 0 ? ["info", "No target"] :
+          budget === 0 && spent > 0 ? ["warn", "Set target"] :
+          ratio > 1 ? ["bad", "Over"] :
+          ratio >= .85 ? ["warn", "Watch"] : ["good", "Good"];
+        const barColor = ratio > 1 ? "var(--red)" : ratio >= .85 ? "var(--amber)" : "var(--teal)";
+        return `
+          <div class="budget-row">
+            <div class="budget-name"><strong>${escapeHtml(cat.name)}</strong><span>${km(spent)} spent of ${km(budget)}</span></div>
+            <strong>${percent(ratio)}</strong>
+            <strong>${km(budget - spent)}</strong>
+            <div class="progress" aria-label="${escapeHtml(cat.name)} progress"><i style="--w:${width}%;--c:${barColor}"></i></div>
+            <span class="status ${status[0]}">${status[1]}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderQuickCategories(monthRows) {
+      const expenseCats = state.categories.filter(c => c.type === "expense").slice(0, 8);
+      els.quickCategories.innerHTML = expenseCats.map(cat => {
+        const spent = sum(monthRows.filter(t => t.type === "expense" && t.category === cat.name).map(t => t.amount));
+        return `
+          <div class="category-row">
+            <div class="meta"><strong>${escapeHtml(cat.name)}</strong><span>${km(spent)} spent this month</span></div>
+            <input data-budget-id="${cat.id}" type="number" min="0" step="0.01" value="${Number(cat.budget || 0)}" aria-label="Budget for ${escapeHtml(cat.name)}">
+            <button class="icon-btn" data-save-budget="${cat.id}" title="Save budget">
+              <svg class="icon" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></svg>
+            </button>
+          </div>
+        `;
+      }).join("");
+
+      els.quickCategories.querySelectorAll("[data-save-budget]").forEach(button => {
+        button.addEventListener("click", () => {
+          const input = els.quickCategories.querySelector(`[data-budget-id="${button.dataset.saveBudget}"]`);
+          updateCategory(button.dataset.saveBudget, { budget: parseMoney(input.value) });
+          toast("Budget updated");
+        });
+      });
+    }
+
+    function renderRecent(rows) {
+      const recent = [...rows].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6);
+      if (!recent.length) {
+        els.recentActivity.innerHTML = emptyBlock("No transactions yet", "Add your first income or expense entry and it will appear here.");
+        return;
+      }
+      els.recentActivity.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Category</th><th>Type</th><th>Amount</th></tr></thead>
+            <tbody>
+              ${recent.map(t => `<tr><td>${dateLabel(t.date)}</td><td>${escapeHtml(t.category)}</td><td>${typeLabel(t.type)}</td><td class="amount ${t.type === "income" ? "accent-green" : "accent-red"}">${km(t.amount)}</td></tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderTransactions() {
+      const month = els.activeMonth.value;
+      const q = els.searchTx.value.trim().toLowerCase();
+      const type = els.filterType.value;
+      const cleared = els.filterCleared.value;
+      let rows = txForMonth(month);
+      if (type !== "all") rows = rows.filter(t => t.type === type);
+      if (cleared !== "all") rows = rows.filter(t => t.cleared === cleared);
+      if (q) {
+        rows = rows.filter(t => [t.description, t.category, t.account, t.method].join(" ").toLowerCase().includes(q));
+      }
+      rows.sort((a, b) => b.date.localeCompare(a.date));
+
+      if (!rows.length) {
+        els.transactionsTable.innerHTML = emptyBlock("No matching transactions", "This table stays empty until you add your own real entries for the selected month.");
+        return;
+      }
+
+      els.transactionsTable.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Method</th><th>Account</th><th>Cleared</th><th>Amount</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map(t => `
+                <tr>
+                  <td>${dateLabel(t.date)}</td>
+                  <td>${typeLabel(t.type)}</td>
+                  <td>${escapeHtml(t.category)}</td>
+                  <td>${escapeHtml(t.description || "")}</td>
+                  <td>${escapeHtml(t.method || "")}</td>
+                  <td>${escapeHtml(t.account || "")}</td>
+                  <td><span class="status ${t.cleared === "yes" ? "good" : "info"}">${t.cleared === "yes" ? "Yes" : "No"}</span></td>
+                  <td class="amount ${t.type === "income" ? "accent-green" : "accent-red"}">${km(t.amount)}</td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="icon-btn" data-edit-tx="${t.id}" title="Edit transaction"><svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg></button>
+                      <button class="icon-btn danger" data-delete-tx="${t.id}" title="Delete transaction"><svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 15H6L5 6"/></svg></button>
+                    </div>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      els.transactionsTable.querySelectorAll("[data-edit-tx]").forEach(button => button.addEventListener("click", () => editTransaction(button.dataset.editTx)));
+      els.transactionsTable.querySelectorAll("[data-delete-tx]").forEach(button => button.addEventListener("click", () => deleteTransaction(button.dataset.deleteTx)));
+    }
+
+    function renderCategoryEditor() {
+      const cats = [...state.categories].sort((a, b) => a.type.localeCompare(b.type) || a.sort - b.sort || a.name.localeCompare(b.name));
+      els.categoryEditor.innerHTML = cats.map(cat => `
+        <div class="budget-row">
+          <input data-cat-name="${cat.id}" value="${escapeHtml(cat.name)}" aria-label="Category name">
+          <select data-cat-type="${cat.id}" aria-label="Category type">
+            <option value="expense" ${cat.type === "expense" ? "selected" : ""}>Expense</option>
+            <option value="income" ${cat.type === "income" ? "selected" : ""}>Income</option>
+          </select>
+          <input data-cat-budget="${cat.id}" type="number" min="0" step="0.01" value="${Number(cat.budget || 0)}" aria-label="Monthly budget">
+          <span class="status ${cat.type === "income" ? "good" : "info"}">${cat.type === "income" ? "Income" : "Expense"}</span>
+          <div class="row-actions">
+            <button class="icon-btn" data-save-cat="${cat.id}" title="Save category"><svg class="icon" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></svg></button>
+            <button class="icon-btn danger" data-delete-cat="${cat.id}" title="Delete category"><svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 15H6L5 6"/></svg></button>
+          </div>
+        </div>
+      `).join("");
+
+      els.categoryEditor.querySelectorAll("[data-save-cat]").forEach(button => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.saveCat;
+          updateCategory(id, {
+            name: els.categoryEditor.querySelector(`[data-cat-name="${id}"]`).value.trim() || "Untitled",
+            type: els.categoryEditor.querySelector(`[data-cat-type="${id}"]`).value,
+            budget: parseMoney(els.categoryEditor.querySelector(`[data-cat-budget="${id}"]`).value)
+          });
+          toast("Category saved");
+        });
+      });
+
+      els.categoryEditor.querySelectorAll("[data-delete-cat]").forEach(button => {
+        button.addEventListener("click", () => deleteCategory(button.dataset.deleteCat));
+      });
+    }
+
+    function saveTransaction(event) {
+      event.preventDefault();
+      const amount = parseMoney(els.txAmount.value);
+      if (amount <= 0) {
+        toast("Enter an amount greater than 0 KM");
+        els.txAmount.focus();
+        return;
+      }
+
+      const payload = {
+        id: els.editingId.value || cryptoId(),
+        date: els.txDate.value,
+        type: els.txType.value,
+        category: els.txCategory.value,
+        description: els.txDesc.value.trim(),
+        method: els.txMethod.value,
+        account: els.txAccount.value.trim(),
+        amount,
+        cleared: els.txCleared.value,
+        createdAt: new Date().toISOString()
+      };
+
+      const index = state.transactions.findIndex(t => t.id === payload.id);
+      if (index >= 0) state.transactions[index] = payload;
+      else state.transactions.push(payload);
+
+      state.activeMonth = monthKey(payload.date);
+      els.activeMonth.value = state.activeMonth;
+      saveState();
+      resetTransactionForm();
+      renderAll();
+      toast(index >= 0 ? "Transaction updated" : "Transaction added");
+    }
+
+    function saveDailyTransaction(event) {
+      event.preventDefault();
+      const amount = parseMoney(els.dailyAmount.value);
+      if (amount <= 0) {
+        toast("Enter an amount greater than 0 KM");
+        els.dailyAmount.focus();
+        return;
+      }
+
+      const payload = {
+        id: cryptoId(),
+        date: todayKey(),
+        type: "expense",
+        category: els.dailyCategory.value,
+        description: els.dailyDesc.value.trim(),
+        method: els.dailyMethod.value,
+        account: "",
+        amount,
+        cleared: "yes",
+        createdAt: new Date().toISOString()
+      };
+
+      state.transactions.push(payload);
+      state.activeMonth = monthKey(payload.date);
+      els.activeMonth.value = state.activeMonth;
+      saveState();
+      els.dailyForm.reset();
+      renderCategoryOptions();
+      renderAll();
+      toast("Added to today");
+      els.dailyAmount.focus();
+    }
+
+    function editTransaction(id) {
+      const tx = state.transactions.find(t => t.id === id);
+      if (!tx) return;
+      showSection("dashboard");
+      els.editingId.value = tx.id;
+      els.txDate.value = tx.date;
+      els.txType.value = tx.type;
+      renderCategoryOptions();
+      els.txCategory.value = tx.category;
+      els.txAmount.value = tx.amount;
+      els.txDesc.value = tx.description || "";
+      els.txMethod.value = tx.method || "Card";
+      els.txAccount.value = tx.account || "";
+      els.txCleared.value = tx.cleared || "yes";
+      els.submitTx.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></svg>Update transaction';
+      els.cancelEdit.hidden = false;
+      document.querySelector("#addPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function resetTransactionForm() {
+      els.txForm.reset();
+      els.editingId.value = "";
+      els.txDate.value = todayKey();
+      els.txType.value = "expense";
+      renderCategoryOptions();
+      els.submitTx.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add transaction';
+      els.cancelEdit.hidden = true;
+    }
+
+    function deleteTransaction(id) {
+      const tx = state.transactions.find(t => t.id === id);
+      if (!tx) return;
+      if (!confirm(`Delete ${tx.category} transaction for ${km(tx.amount)}?`)) return;
+      state.transactions = state.transactions.filter(t => t.id !== id);
+      saveState();
+      renderAll();
+      toast("Transaction deleted");
+    }
+
+    function addCategory(event) {
+      event.preventDefault();
+      const name = els.catName.value.trim();
+      if (!name) return;
+      state.categories.push({
+        id: cryptoId(),
+        name,
+        type: els.catType.value,
+        budget: parseMoney(els.catBudget.value),
+        sort: state.categories.length
+      });
+      saveState();
+      els.categoryForm.reset();
+      renderAll();
+      toast("Category added");
+    }
+
+    function updateCategory(id, patch) {
+      state.categories = state.categories.map(cat => cat.id === id ? { ...cat, ...patch } : cat);
+      saveState();
+      renderAll();
+    }
+
+    function deleteCategory(id) {
+      const cat = state.categories.find(c => c.id === id);
+      if (!cat) return;
+      if (!confirm(`Delete category "${cat.name}"? Existing transactions will stay unchanged.`)) return;
+      state.categories = state.categories.filter(c => c.id !== id);
+      saveState();
+      renderAll();
+      toast("Category deleted");
+    }
+
+    function exportCsv() {
+      const headers = ["Date", "Type", "Category", "Description", "Method", "Account", "Cleared", "Amount KM"];
+      const rows = state.transactions
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map(t => [t.date, t.type, t.category, t.description, t.method, t.account, t.cleared, t.amount]);
+      download(`km-budget-transactions-${todayKey()}.csv`, [headers, ...rows].map(csvRow).join("\n"), "text/csv");
+      toast("CSV exported");
+    }
+
+    function exportJson() {
+      download(`km-budget-backup-${todayKey()}.json`, JSON.stringify(state, null, 2), "application/json");
+      toast("Backup exported");
+    }
+
+    function createSyncString() {
+      els.syncString.value = encodeSyncState(state);
+      els.syncString.focus();
+      els.syncString.select();
+      toast("Sync string created");
+    }
+
+    async function copySyncString() {
+      if (!els.syncString.value.trim()) {
+        els.syncString.value = encodeSyncState(state);
+      }
+      try {
+        await navigator.clipboard.writeText(els.syncString.value.trim());
+        toast("Sync string copied");
+      } catch (_) {
+        els.syncString.focus();
+        els.syncString.select();
+        toast("Select and copy the sync string");
+      }
+    }
+
+    function importSyncString() {
+      const text = els.syncString.value.trim();
+      if (!text) {
+        toast("Paste a sync string first");
+        return;
+      }
+      try {
+        const parsed = decodeSyncState(text);
+        state = normalizeImportedState(parsed);
+        saveState();
+        els.activeMonth.value = state.activeMonth;
+        renderAll();
+        toast("Sync imported");
+      } catch (error) {
+        toast(error.message || "Sync string could not be imported");
+      }
+    }
+
+    function importJson() {
+      const file = els.importJson.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          state = normalizeImportedState(parsed);
+          saveState();
+          els.activeMonth.value = state.activeMonth;
+          renderAll();
+          toast("Backup imported");
+        } catch (_) {
+          toast("That backup file could not be imported");
+        }
+      };
+      reader.readAsText(file);
+      els.importJson.value = "";
+    }
+
+    function resetAllData() {
+      if (!confirm("Clear all budgets and transactions from this browser? This cannot be undone unless you exported a backup.")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state = {
+        activeMonth: monthKey(new Date()),
+        categories: DEFAULT_CATEGORIES.map(cat => ({ ...cat, id: cryptoId() })),
+        transactions: []
+      };
+      els.activeMonth.value = state.activeMonth;
+      saveState();
+      renderAll();
+      toast("All local data cleared");
+    }
+
+    function encodeSyncState(source) {
+      const payload = {
+        app: "km-budget-studio",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        activeMonth: source.activeMonth || monthKey(new Date()),
+        categories: source.categories || [],
+        transactions: source.transactions || []
+      };
+      return `KMB1.${base64UrlEncode(JSON.stringify(payload))}`;
+    }
+
+    function decodeSyncState(text) {
+      const clean = text.replace(/\s+/g, "");
+      if (clean.startsWith("KMB1.")) {
+        return JSON.parse(base64UrlDecode(clean.slice(5)));
+      }
+      return JSON.parse(text);
+    }
+
+    function normalizeImportedState(input) {
+      const parsed = input && input.app === "km-budget-studio" ? input : input;
+      if (!parsed || !Array.isArray(parsed.categories) || !Array.isArray(parsed.transactions)) {
+        throw new Error("Invalid budget data");
+      }
+      return {
+        activeMonth: parsed.activeMonth || monthKey(new Date()),
+        categories: parsed.categories.map((cat, index) => ({
+          id: cat.id || cryptoId(),
+          name: String(cat.name || "Untitled"),
+          type: cat.type === "income" ? "income" : "expense",
+          budget: parseMoney(cat.budget),
+          sort: Number.isFinite(Number(cat.sort)) ? Number(cat.sort) : index
+        })),
+        transactions: parsed.transactions.map(tx => ({
+          id: tx.id || cryptoId(),
+          date: tx.date || todayKey(),
+          type: tx.type === "income" ? "income" : "expense",
+          category: String(tx.category || "Miscellaneous"),
+          description: String(tx.description || ""),
+          method: String(tx.method || "Card"),
+          account: String(tx.account || ""),
+          amount: parseMoney(tx.amount),
+          cleared: tx.cleared === "no" ? "no" : "yes",
+          createdAt: tx.createdAt || new Date().toISOString()
+        }))
+      };
+    }
+
+    function base64UrlEncode(value) {
+      const bytes = new TextEncoder().encode(value);
+      let binary = "";
+      bytes.forEach(byte => binary += String.fromCharCode(byte));
+      return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+    }
+
+    function base64UrlDecode(value) {
+      const padded = value.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(value.length / 4) * 4, "=");
+      const binary = atob(padded);
+      const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+      return new TextDecoder().decode(bytes);
+    }
+
+    function txForMonth(month) {
+      return state.transactions.filter(t => monthKey(t.date) === month);
+    }
+
+    function km(value) {
+      const clean = Math.abs(value) < .005 ? 0 : value;
+      return `${clean.toLocaleString("bs-BA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} KM`;
+    }
+
+    function percent(value) {
+      if (!Number.isFinite(value)) return "0%";
+      return `${Math.round(value * 100)}%`;
+    }
+
+    function sum(values) {
+      return values.reduce((total, value) => total + Number(value || 0), 0);
+    }
+
+    function parseMoney(value) {
+      return Math.max(0, Number(String(value || "0").replace(",", ".")) || 0);
+    }
+
+    function monthKey(value) {
+      const date = value instanceof Date ? value : new Date(`${value}T00:00:00`);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function todayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    }
+
+    function dateLabel(value) {
+      return new Date(`${value}T00:00:00`).toLocaleDateString("bs-BA", { year: "numeric", month: "short", day: "2-digit" });
+    }
+
+    function typeLabel(type) {
+      return type === "income" ? "Income" : "Expense";
+    }
+
+    function emptyBlock(title, text) {
+      return `
+        <div class="empty">
+          <div>
+            <svg viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/><path d="M18 16v6"/><path d="M15 19h6"/></svg>
+            <h3>${escapeHtml(title)}</h3>
+            <p>${escapeHtml(text)}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[char]));
+    }
+
+    function cryptoId() {
+      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      return `id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function download(filename, content, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function csvRow(row) {
+      return row.map(value => `"${String(value ?? "").replace(/"/g, '""')}"`).join(",");
+    }
+
+    let toastTimer;
+    function toast(message) {
+      clearTimeout(toastTimer);
+      els.toast.textContent = message;
+      els.toast.classList.add("show");
+      toastTimer = setTimeout(() => els.toast.classList.remove("show"), 2300);
+    }
+
+    function runQaModeIfRequested() {
+      const mode = new URLSearchParams(window.location.search).get("qa");
+      if (!mode) return;
+
+      if (mode === "clean") {
+        localStorage.removeItem(STORAGE_KEY);
+        state = {
+          activeMonth: monthKey(new Date()),
+          categories: DEFAULT_CATEGORIES.map(cat => ({ ...cat, id: cryptoId() })),
+          transactions: []
+        };
+        els.activeMonth.value = state.activeMonth;
+        saveState();
+        renderAll();
+        document.body.dataset.qaResult = "clean";
+        return;
+      }
+
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        state = {
+          activeMonth: monthKey(new Date()),
+          categories: DEFAULT_CATEGORIES.map(cat => ({ ...cat, id: cryptoId() })),
+          transactions: []
+        };
+        const tx = {
+          id: cryptoId(),
+          date: todayKey(),
+          type: "expense",
+          category: "Groceries",
+          description: "QA coffee",
+          method: "Card",
+          account: "",
+          amount: 25.5,
+          cleared: "yes",
+          createdAt: new Date().toISOString()
+        };
+        state.transactions.push(tx);
+        state.activeMonth = monthKey(tx.date);
+        saveState();
+        els.activeMonth.value = state.activeMonth;
+        renderAll();
+        const sync = encodeSyncState(state);
+        const imported = normalizeImportedState(decodeSyncState(sync));
+        const valid = sync.startsWith("KMB1.") &&
+          imported.transactions.length === 1 &&
+          Math.abs(imported.transactions[0].amount - 25.5) < 0.001 &&
+          els.todaySpent.textContent.includes("25");
+        document.body.dataset.qaResult = valid ? "pass" : "fail";
+        const marker = document.createElement("pre");
+        marker.id = "qa-result";
+        marker.textContent = valid ? "QA_PASS" : "QA_FAIL";
+        document.body.appendChild(marker);
+      } catch (error) {
+        document.body.dataset.qaResult = "fail";
+        const marker = document.createElement("pre");
+        marker.id = "qa-result";
+        marker.textContent = `QA_FAIL ${error.message}`;
+        document.body.appendChild(marker);
+      }
+    }
+  </script>
+</body>
+</html>

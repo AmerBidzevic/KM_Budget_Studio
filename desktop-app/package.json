@@ -1,0 +1,41 @@
+{
+  "name": "km-budget-studio-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Desktop shell for KM Budget Studio.",
+  "main": "main.cjs",
+  "scripts": {
+    "prepare-app": "node prepare-app.mjs",
+    "start": "npm run prepare-app && electron .",
+    "build:unpacked": "npm run prepare-app && set ELECTRON_BUILDER_CACHE=.builder-cache&& set CSC_IDENTITY_AUTO_DISCOVERY=false&& electron-builder --win --dir",
+    "build": "npm run prepare-app && set ELECTRON_BUILDER_CACHE=.builder-cache&& set CSC_IDENTITY_AUTO_DISCOVERY=false&& electron-builder --win nsis portable"
+  },
+  "build": {
+    "appId": "com.local.kmbudgetstudio",
+    "productName": "KM Budget Studio",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.cjs",
+      "app/**/*"
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^30.5.1",
+    "electron-builder": "^24.13.3"
+  }
+}
